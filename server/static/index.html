@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Equipment Scanner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-slate-50 text-slate-900">
+    <div class="min-h-screen max-w-6xl mx-auto px-4 py-8">
+      <header class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <div>
+          <h1 class="text-3xl font-semibold">Equipment Scanner</h1>
+          <p class="text-slate-600">
+            Capture a frame from your webcam, send it to the model, and view matched equipment details.
+          </p>
+        </div>
+        <div id="status-pill" class="inline-flex items-center gap-2 rounded-full bg-emerald-100 text-emerald-700 px-4 py-2 text-sm font-medium">
+          <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+          Ready
+        </div>
+      </header>
+
+      <main class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <section class="bg-white shadow-sm rounded-xl p-4 border border-slate-100">
+          <div class="aspect-video bg-slate-200 rounded-lg overflow-hidden relative">
+            <video id="video" autoplay playsinline class="w-full h-full object-cover"></video>
+            <div id="video-overlay" class="absolute inset-0 flex items-center justify-center text-slate-600 text-sm">
+              Allow camera access to start.
+            </div>
+          </div>
+          <div class="flex gap-3 mt-4">
+            <button id="scan-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium disabled:opacity-60">
+              Scan
+            </button>
+            <button id="reset-btn" class="bg-slate-100 hover:bg-slate-200 text-slate-800 px-4 py-2 rounded-lg font-medium">
+              Reset
+            </button>
+          </div>
+          <p id="hint" class="text-xs text-slate-500 mt-2">
+            Tip: Hold the item steady and centered before scanning.
+          </p>
+        </section>
+
+        <section class="space-y-4">
+          <div class="bg-white shadow-sm rounded-xl p-4 border border-slate-100">
+            <div class="flex items-center justify-between mb-3">
+              <h2 class="font-semibold text-lg">Scan Result</h2>
+              <span id="result-count" class="text-sm text-slate-500">No scans yet</span>
+            </div>
+            <div id="result-card" class="space-y-3 text-sm text-slate-700">
+              <p class="text-slate-500">No detection yet. Scan an item to see details.</p>
+            </div>
+          </div>
+
+          <div class="bg-white shadow-sm rounded-xl p-4 border border-slate-100">
+            <div class="flex items-center justify-between mb-3">
+              <h2 class="font-semibold text-lg">Recent Scans</h2>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="min-w-full text-sm">
+                <thead>
+                  <tr class="text-left text-slate-500 border-b">
+                    <th class="py-2">Time</th>
+                    <th class="py-2">Label</th>
+                    <th class="py-2">Confidence</th>
+                    <th class="py-2">Status</th>
+                  </tr>
+                </thead>
+                <tbody id="history" class="divide-y"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <canvas id="canvas" class="hidden"></canvas>
+
+    <script>
+      const video = document.getElementById("video");
+      const canvas = document.getElementById("canvas");
+      const scanBtn = document.getElementById("scan-btn");
+      const resetBtn = document.getElementById("reset-btn");
+      const resultCard = document.getElementById("result-card");
+      const resultCount = document.getElementById("result-count");
+      const historyEl = document.getElementById("history");
+      const statusPill = document.getElementById("status-pill");
+      const overlay = document.getElementById("video-overlay");
+
+      let stream = null;
+      const history = [];
+
+      async function initCamera() {
+        try {
+          stream = await navigator.mediaDevices.getUserMedia({ video: true });
+          video.srcObject = stream;
+          overlay.textContent = "";
+          overlay.classList.add("pointer-events-none");
+          setStatus("Ready", "emerald");
+        } catch (err) {
+          setStatus("Camera blocked", "red");
+          overlay.textContent = "Camera access is required.";
+          console.error(err);
+        }
+      }
+
+      function setStatus(text, color) {
+        const colors = {
+          emerald: ["bg-emerald-100", "text-emerald-700", "bg-emerald-500"],
+          red: ["bg-rose-100", "text-rose-700", "bg-rose-500"],
+          amber: ["bg-amber-100", "text-amber-700", "bg-amber-500"],
+        };
+        const target = colors[color] || colors.emerald;
+        statusPill.className = `inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium ${target[0]} ${target[1]}`;
+        statusPill.innerHTML = `<span class="h-2 w-2 rounded-full ${target[2]}"></span>${text}`;
+      }
+
+      function captureFrame() {
+        if (!video.videoWidth || !video.videoHeight) {
+          throw new Error("Camera not ready");
+        }
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        return canvas.toDataURL("image/jpeg", 0.8);
+      }
+
+      function renderHistory() {
+        historyEl.innerHTML = history
+          .map(
+            (item) => `
+          <tr>
+            <td class="py-2 text-slate-600">${item.time}</td>
+            <td class="py-2">${item.label}</td>
+            <td class="py-2 text-slate-600">${item.confidence}</td>
+            <td class="py-2">
+              <span class="px-2 py-1 rounded-full text-xs bg-slate-100 text-slate-700">${item.status}</span>
+            </td>
+          </tr>
+        `
+          )
+          .join("");
+      }
+
+      function renderResult(detections) {
+        if (!detections.length) {
+          resultCard.innerHTML = '<p class="text-slate-500">No objects detected.</p>';
+          resultCount.textContent = "0 detections";
+          return;
+        }
+
+        const [top] = detections;
+        resultCount.textContent = `${detections.length} detection${detections.length > 1 ? "s" : ""}`;
+
+        const detailBlock = top.details
+          ? `
+              <div class="space-y-1">
+                <div class="font-semibold text-slate-900">${top.details.name || top.label}</div>
+                <div class="text-slate-600">${top.details.description || ""}</div>
+                <div class="text-xs text-slate-500">Code: ${top.details.code || "N/A"} | Location: ${
+              top.details.location || "N/A"
+            }</div>
+                <span class="inline-flex items-center text-xs px-2 py-1 rounded-full bg-slate-100 text-slate-700">${
+                  top.details.status || "unknown"
+                }</span>
+              </div>
+            `
+          : `<div class="font-semibold">${top.label}</div><div class="text-slate-500 text-sm">No saved details for this label.</div>`;
+
+        const list = detections
+          .map(
+            (d) => `
+            <div class="flex items-center justify-between py-1 border-b last:border-none">
+              <div class="font-medium">${d.label}</div>
+              <div class="text-xs text-slate-600">Conf: ${d.confidence}</div>
+            </div>
+          `
+          )
+          .join("");
+
+        resultCard.innerHTML = `
+          <div class="flex items-center justify-between">
+            <div class="text-xs font-semibold text-slate-500">Top match</div>
+            <span class="text-xs px-2 py-1 rounded-full bg-indigo-50 text-indigo-700">${top.confidence} confidence</span>
+          </div>
+          ${detailBlock}
+          <div class="mt-3">
+            <div class="text-xs font-semibold text-slate-500 mb-1">All detections</div>
+            <div class="rounded-lg border border-slate-100 divide-y bg-slate-50">${list}</div>
+          </div>
+        `;
+      }
+
+      async function sendScan() {
+        try {
+          setStatus("Scanning...", "amber");
+          scanBtn.disabled = true;
+          const image = captureFrame();
+          const res = await fetch("/api/scan", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ image }),
+          });
+          if (!res.ok) {
+            throw new Error("Scan failed: " + res.statusText);
+          }
+          const data = await res.json();
+          renderResult(data.detections || []);
+          const top = data.detections?.[0];
+          history.unshift({
+            time: new Date().toLocaleTimeString(),
+            label: top ? top.label : "No detection",
+            confidence: top ? top.confidence : "-",
+            status: top?.details?.status || "N/A",
+          });
+          if (history.length > 10) history.pop();
+          renderHistory();
+          setStatus("Ready", "emerald");
+        } catch (err) {
+          console.error(err);
+          setStatus("Error scanning", "red");
+          resultCard.innerHTML = `<p class="text-rose-600">Error: ${err.message}</p>`;
+        } finally {
+          scanBtn.disabled = false;
+        }
+      }
+
+      scanBtn.addEventListener("click", sendScan);
+      resetBtn.addEventListener("click", () => {
+        renderResult([]);
+        setStatus("Ready", "emerald");
+      });
+
+      initCamera();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,26 @@
+{
+  "hard_hat": {
+    "name": "Hard Hat",
+    "code": "HH-001",
+    "category": "PPE",
+    "description": "Standard safety helmet for site use.",
+    "location": "Tool room A",
+    "status": "in-stock"
+  },
+  "safety_vest": {
+    "name": "Safety Vest",
+    "code": "SV-201",
+    "category": "PPE",
+    "description": "High-visibility vest for onsite operations.",
+    "location": "Tool room B",
+    "status": "checked-out"
+  },
+  "fire_extinguisher": {
+    "name": "Fire Extinguisher",
+    "code": "FX-010",
+    "category": "Safety",
+    "description": "5kg ABC dry chemical extinguisher.",
+    "location": "Near exit 1",
+    "status": "due-inspection"
+  }
+}
