@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="IBCRS - Real-time object detection powered by YOLOv8 AI">
+    <title>IBCRS - Intelligent BioTech Component Recognition System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%);
+            color: #ffffff;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            background: rgba(15, 20, 25, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0, 102, 255, 0.2);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .navbar-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #0066ff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            font-size: 2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #a0aec0;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: #0066ff;
+        }
+
+        /* MAIN CONTAINER */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* HEADER SECTION */
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #0066ff, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: #a0aec0;
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        /* VIDEO SECTION */
+        .video-section {
+            background: rgba(26, 31, 46, 0.8);
+            border: 2px solid rgba(0, 102, 255, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .video-section h2 {
+            margin-bottom: 1rem;
+            color: #0066ff;
+            font-size: 1.5rem;
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: #0f1419;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(0, 102, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .video-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .video-placeholder {
+            text-align: center;
+            color: #a0aec0;
+        }
+
+        .video-placeholder i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .status-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 8px 16px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ef4444;
+            animation: pulse 2s infinite;
+        }
+
+        .status-dot.active {
+            background: #10b981;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* CONTROLS */
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 1rem;
+        }
+
+        .btn-start {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-start:hover:not(:disabled) {
+            background: #059669;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-stop {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-stop:hover:not(:disabled) {
+            background: #dc2626;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-snapshot {
+            background: #0066ff;
+            color: white;
+        }
+
+        .btn-snapshot:hover {
+            background: #0052cc;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 102, 255, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* STATS PANEL */
+        .stats-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .stat-card {
+            background: rgba(26, 31, 46, 0.8);
+            border: 1px solid rgba(0, 102, 255, 0.2);
+            border-radius: 8px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-card h3 {
+            color: #0066ff;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            border-bottom: 1px solid rgba(0, 102, 255, 0.2);
+            padding-bottom: 0.8rem;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .stat-label {
+            color: #a0aec0;
+            font-weight: 500;
+        }
+
+        .stat-value {
+            color: #00d4ff;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .class-badge {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, rgba(0, 102, 255, 0.15), rgba(0, 212, 255, 0.1));
+            padding: 1rem 1.2rem;
+            border-radius: 8px;
+            border: 2px solid rgba(0, 102, 255, 0.4);
+            border-left: 4px solid #0066ff;
+            margin-bottom: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            gap: 0.8rem;
+        }
+
+        .class-badge:hover {
+            background: linear-gradient(135deg, rgba(0, 102, 255, 0.25), rgba(0, 212, 255, 0.2));
+            border-color: rgba(0, 212, 255, 0.6);
+            border-left-color: #00d4ff;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 102, 255, 0.4);
+        }
+
+        .class-badge-content {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            flex-grow: 1;
+        }
+
+        .class-badge-icon {
+            width: 32px;
+            height: 32px;
+            background: rgba(0, 102, 255, 0.2);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0066ff;
+            font-size: 1rem;
+        }
+
+        .class-badge-text {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+
+        .class-badge-name {
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .class-badge-action {
+            color: #00d4ff;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .class-badge-action i {
+            font-size: 0.7rem;
+        }
+
+        .class-badge .count {
+            background: linear-gradient(135deg, #0066ff, #0052cc);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            min-width: 50px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 102, 255, 0.3);
+        }
+
+        /* INFO SECTION */
+        .info-section {
+            background: rgba(26, 31, 46, 0.8);
+            border: 1px solid rgba(0, 102, 255, 0.2);
+            border-radius: 12px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            margin-top: 2rem;
+        }
+
+        .info-section h2 {
+            color: #0066ff;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .info-item {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .info-icon {
+            font-size: 2rem;
+            color: #0066ff;
+            min-width: 50px;
+        }
+
+        .info-content h4 {
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-content p {
+            color: #a0aec0;
+            font-size: 0.95rem;
+        }
+
+        /* FOOTER */
+        .footer {
+            background: rgba(15, 20, 25, 0.95);
+            border-top: 1px solid rgba(0, 102, 255, 0.2);
+            padding: 2rem;
+            text-align: center;
+            color: #a0aec0;
+            margin-top: 3rem;
+        }
+
+        /* ALERTS */
+        .alert {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            color: white;
+            z-index: 9999;
+            animation: slideIn 0.3s ease-out;
+            backdrop-filter: blur(10px);
+        }
+
+        .alert.success {
+            background: rgba(16, 185, 129, 0.9);
+        }
+
+        .alert.error {
+            background: rgba(239, 68, 68, 0.9);
+        }
+
+        .alert.warning {
+            background: rgba(245, 158, 11, 0.9);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* MODAL STYLES */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 10000;
+            overflow-y: auto;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, rgba(15, 20, 25, 0.95) 0%, rgba(26, 31, 46, 0.95) 100%);
+            border: 1px solid rgba(0, 102, 255, 0.3);
+            border-radius: 12px;
+            max-width: 900px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 2rem;
+            position: relative;
+            backdrop-filter: blur(10px);
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(0, 102, 255, 0.2);
+        }
+
+        .modal-header h2 {
+            color: #0066ff;
+            margin: 0;
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .modal-header .close-btn {
+            background: none;
+            border: none;
+            color: #a0aec0;
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            padding: 0;
+            width: auto;
+            height: auto;
+        }
+
+        .modal-header .close-btn:hover {
+            color: #00d4ff;
+        }
+
+        .modal-body {
+            color: #e0e0e0;
+            line-height: 1.8;
+        }
+
+        .modal-section {
+            margin-bottom: 2rem;
+        }
+
+        .modal-section h3 {
+            color: #00d4ff;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .modal-section p {
+            color: #b0b8c0;
+            line-height: 1.8;
+            margin-bottom: 0.8rem;
+        }
+
+        .modal-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .modal-section li {
+            color: #b0b8c0;
+            margin-bottom: 0.8rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .modal-section li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #00d4ff;
+            font-weight: bold;
+        }
+
+        .advantages-list {
+            background: rgba(16, 185, 129, 0.1);
+            border-left: 3px solid #10b981;
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 0 0 1rem 0;
+        }
+
+        .disadvantages-list {
+            background: rgba(239, 68, 68, 0.1);
+            border-left: 3px solid #ef4444;
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 0 0 1rem 0;
+        }
+
+        .video-embed {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .video-embed iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 8px;
+        }
+
+        .icon-circle {
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 102, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0066ff;
+            font-size: 1.5rem;
+        }
+
+        /* INFO BUTTON STYLES */
+        .info-button {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: linear-gradient(135deg, #0066ff 0%, #0052cc 100%);
+            border: 2px solid #0066ff;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(0, 102, 255, 0.3);
+        }
+
+        .info-button:hover {
+            background: linear-gradient(135deg, #0052cc 0%, #0039a6 100%);
+            border-color: #00d4ff;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 102, 255, 0.5);
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .info-button i {
+            font-size: 1.3rem;
+            color: #ffffff;
+        }
+
+        .info-button:hover i {
+            color: #00d4ff;
+        }
+
+        .info-button span {
+            flex-grow: 1;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .controls {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                gap: 1rem;
+                font-size: 0.9rem;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="logo">
+                <i class="fas fa-brain"></i>
+                <span>IBCRS</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#detection">Detection</a></li>
+                <li><a href="#stats">Features</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTAINER -->
+    <div class="container">
+        <!-- HEADER -->
+        <div class="header">
+            <h1>IBCRS</h1>
+            <p>Intelligent BioTech Component Recognition System</p>
+            <p style="color: #00d4ff; margin-top: 0.5rem;">Real-time Object Detection with YOLOv8 AI</p>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="main-content">
+            <!-- VIDEO SECTION -->
+            <div class="video-section">
+                <h2>Live Detection Feed</h2>
+                
+                <div class="video-container">
+                    <div class="status-badge">
+                        <div class="status-dot" id="status-dot"></div>
+                        <span id="status-text">Ready</span>
+                    </div>
+                    <img id="video-feed" src="" alt="Live Detection Feed" style="display: none;">
+                    <div class="video-placeholder" id="video-placeholder">
+                        <i class="fas fa-video"></i>
+                        <p>Click "Start Detection" to begin</p>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <button id="start-btn" class="btn btn-start">
+                        <i class="fas fa-play"></i> Start
+                    </button>
+                    <button id="stop-btn" class="btn btn-stop" disabled>
+                        <i class="fas fa-stop"></i> Stop
+                    </button>
+                    <button id="snapshot-btn" class="btn btn-snapshot" disabled>
+                        <i class="fas fa-camera"></i> Snapshot
+                    </button>
+                </div>
+            </div>
+
+            <!-- STATS PANEL -->
+            <div class="stats-panel">
+                <!-- Performance Stats -->
+                <div class="stat-card">
+                    <h3>Performance Metrics</h3>
+                    <div class="stat-item">
+                        <span class="stat-label">Inference Time</span>
+                        <span class="stat-value" id="inference-time">0.00 ms</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">FPS</span>
+                        <span class="stat-value" id="fps">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">CPU Usage</span>
+                        <span class="stat-value" id="cpu-usage">0%</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Memory Usage</span>
+                        <span class="stat-value" id="memory-usage">0%</span>
+                    </div>
+                </div>
+
+                <!-- Detection Stats -->
+                <div class="stat-card">
+                    <h3>Detection Summary</h3>
+                    <div class="stat-item">
+                        <span class="stat-label">Total Detections</span>
+                        <span class="stat-value" id="total-detections">0</span>
+                    </div>
+                    <div id="detected-classes" style="margin-top: 1rem;">
+                        <p style="color: #a0aec0; font-size: 0.9rem; text-align: center;">No detections yet</p>
+                    </div>
+                </div>
+
+                <!-- Info Button Section -->
+                <div class="stat-card" id="info-button-section" style="display: none;">
+                    <h3><i class="fas fa-graduation-cap"></i> Component Information</h3>
+                    <p style="color: #a0aec0; margin-bottom: 1.5rem; font-size: 0.95rem;">Click on any button below to view detailed information, advantages, disadvantages, and tutorial videos:</p>
+                    <div id="info-buttons-container" style="display: flex; flex-direction: column; gap: 0.8rem;">
+                    </div>
+                </div>
+
+                <!-- System Info -->
+                <div class="stat-card">
+                    <h3>System Information</h3>
+                    <div class="stat-item">
+                        <span class="stat-label">Model</span>
+                        <span class="stat-value" style="font-size: 0.95rem;">YOLOv8</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Confidence</span>
+                        <span class="stat-value" style="font-size: 0.95rem;">40%</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Resolution</span>
+                        <span class="stat-value" style="font-size: 0.95rem;">1280×720</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- INFO SECTION -->
+        <div class="info-section" id="stats">
+            <h2 style="font-size: 2rem; margin-bottom: 1rem;">
+                <i class="fas fa-star"></i> Key Features
+            </h2>
+            
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <div class="info-content">
+                        <h4>Real-Time Detection</h4>
+                        <p>Stream video directly from your webcam with live object detection feedback</p>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <div class="info-content">
+                        <h4>Lightning Fast</h4>
+                        <p>YOLOv8 delivers state-of-the-art speed and accuracy</p>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="info-content">
+                        <h4>Performance Tracking</h4>
+                        <p>Monitor FPS, inference time, and system resources</p>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-cog"></i>
+                    </div>
+                    <div class="info-content">
+                        <h4>Easy Integration</h4>
+                        <p>RESTful API for seamless integration with apps</p>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <div class="info-content">
+                        <h4>AI Powered</h4>
+                        <p>Advanced deep learning models for accurate recognition</p>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <div class="info-content">
+                        <h4>Mobile Responsive</h4>
+                        <p>Works on desktop, tablet, and mobile devices</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- COMPONENT DETAIL MODAL -->
+    <div class="modal" id="componentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">
+                    <span class="icon-circle" id="modalIcon"></span>
+                    Component Details
+                </h2>
+                <button class="close-btn" onclick="closeComponentModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Content will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <p>&copy; 2026 IBCRS - Intelligent BioTech Component Recognition System. All rights reserved.</p>
+        <p style="margin-top: 1rem; font-size: 0.9rem;">Powered by YOLOv8 • Flask • OpenCV • PyTorch</p>
+    </footer>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:5000';
+        let isDetectionRunning = false;
+        let statsInterval = null;
+
+        // COMPONENT INFORMATION DATABASE - Based on actual dataset items from data.yaml
+        const componentsDatabase = {
+            'cam': {
+                icon: 'fas fa-camera',
+                name: 'Camera (Cam)',
+                introduction: 'Camera detection module for identifying optical cameras and lens-based imaging devices. Used for security system detection and surveillance equipment recognition.',
+                introduction_detail: 'The camera detection system identifies various types of cameras including CCTV cameras, webcams, and surveillance equipment. This is essential for security assessments and identifying monitoring devices in environments.',
+                advantages: [
+                    'Accurate detection of various camera types',
+                    'Works with different camera angles and positions',
+                    'Can identify hidden and exposed cameras',
+                    'Useful for security audits and asset tracking',
+                    'Fast real-time detection capability'
+                ],
+                disadvantages: [
+                    'May confuse similar lens-based objects',
+                    'Small cameras harder to detect',
+                    'Performance varies with image resolution',
+                    'Lighting conditions affect accuracy'
+                ],
+                how_it_works: 'Camera detection uses YOLOv8 trained on camera imagery datasets. The model learns to recognize distinctive camera features like lenses, body shapes, mounts, and optical elements. It processes multiple scales for detection of cameras at various distances.',
+                tutorial_video: 'https://www.youtube.com/embed/tPr4bQKMnJ4'
+            },
+            'dronerx': {
+                icon: 'fas fa-satellite',
+                name: 'Drone Receiver (DroneRx)',
+                introduction: 'Drone receiver detection module for identifying drone receiver units and control systems. Critical for detecting drone operators and identifying drone control infrastructure.',
+                introduction_detail: 'The drone receiver detection system identifies receiver components and control units used in drone operation. This is valuable for operational security, equipment tracking, and identifying drone control stations.',
+                advantages: [
+                    'Accurate detection of receiver components',
+                    'Identifies control equipment and interfaces',
+                    'Works in various operational environments',
+                    'Useful for equipment inventory and tracking',
+                    'Real-time detection for security monitoring'
+                ],
+                disadvantages: [
+                    'Small component sizes reduce detection range',
+                    'May confuse with similar electronic devices',
+                    'Performance varies with component visibility',
+                    'Requires clear line of sight for optimal detection'
+                ],
+                how_it_works: 'Drone receiver detection uses YOLOv8 trained on drone receiver and control equipment datasets. The model learns distinctive receiver features including antenna arrays, control interfaces, LED indicators, and circuit board patterns. Multiple scale processing enables detection at various distances.',
+                tutorial_video: 'https://www.youtube.com/embed/V1_TgW1pQuA'
+            },
+            'pir': {
+                icon: 'fas fa-lightbulb',
+                name: 'PIR Sensor',
+                introduction: 'Passive Infrared sensor detection module for identifying thermal motion sensors. Used for detecting security sensors and infrared detection equipment.',
+                introduction_detail: 'The PIR sensor detection system identifies Passive Infrared sensors used in security systems, motion detection, and thermal monitoring. These sensors are critical components in alarm systems and automated control systems.',
+                advantages: [
+                    'Accurate detection of PIR sensor modules',
+                    'Identifies thermal detection equipment',
+                    'Works in varied indoor and outdoor environments',
+                    'Useful for security system audits',
+                    'Real-time detection for equipment monitoring'
+                ],
+                disadvantages: [
+                    'Small sensor sizes can reduce visibility',
+                    'May confuse with similar mounting devices',
+                    'Performance varies with mounting angle',
+                    'Color and material affect detection accuracy'
+                ],
+                how_it_works: 'PIR sensor detection uses YOLOv8 trained on thermal sensor and security equipment datasets. The model learns distinctive PIR features including sensor lenses, bimetallic strips, protective domes, and thermal elements. It processes feature maps at multiple scales for robust detection.',
+                tutorial_video: 'https://www.youtube.com/embed/kKC1DQTpT5o'
+            },
+            'sonar': {
+                icon: 'fas fa-wave-square',
+                name: 'Sonar Sensor',
+                introduction: 'Sonar sensor detection module for identifying ultrasonic and acoustic detection devices. Used for detecting ranging equipment and acoustic monitoring sensors.',
+                introduction_detail: 'The sonar sensor detection system identifies sonar and ultrasonic sensors used in distance measurement, underwater detection, and acoustic monitoring. These sensors are essential components in mapping, navigation, and surveillance systems.',
+                advantages: [
+                    'Accurate detection of sonar sensor devices',
+                    'Identifies acoustic detection equipment',
+                    'Works in diverse environmental conditions',
+                    'Useful for equipment assessment and tracking',
+                    'Real-time detection capability'
+                ],
+                disadvantages: [
+                    'Sensor dome reflections can affect detection',
+                    'May confuse with similar sensors',
+                    'Performance varies with installation position',
+                    'Material composition impacts accuracy'
+                ],
+                how_it_works: 'Sonar sensor detection uses YOLOv8 trained on acoustic sensor datasets. The model learns distinctive sonar features including transducer elements, protective domes, mounting hardware, and acoustic emission components. Multi-scale feature processing enables reliable detection at various distances.',
+                tutorial_video: 'https://www.youtube.com/embed/ySt2K2VURXE'
+            },
+            'colorimeter': {
+                icon: 'fas fa-flask',
+                name: 'Colorimeter',
+                introduction: 'Colorimeter detection module for identifying color analysis and optical measurement devices. Essential for detecting laboratory equipment and color verification systems.',
+                introduction_detail: 'The colorimeter detection system identifies optical color measurement devices used in laboratories, quality control, and research environments. This is valuable for equipment inventory, laboratory audits, and identifying color analysis infrastructure.',
+                advantages: [
+                    'High accuracy in colorimeter identification',
+                    'Detects various colorimeter types and models',
+                    'Works with different optical configurations',
+                    'Effective for laboratory equipment assessment',
+                    'Real-time detection for inventory management'
+                ],
+                disadvantages: [
+                    'Small component sizes limit detection range',
+                    'May confuse with similar optical devices',
+                    'Reflective surfaces can affect detection',
+                    'Performance varies with lighting angles'
+                ],
+                how_it_works: 'Colorimeter detection uses YOLOv8 trained on optical measurement device datasets. The model learns distinctive colorimeter features including optical windows, measurement chambers, light sources, and sensor arrays. The system employs multi-scale detection to identify colorimeters at various distances.',
+                tutorial_video: 'https://www.youtube.com/embed/dQw4w9WgXcQ'
+            },
+            'magnetic_stirrer': {
+                icon: 'fas fa-microchip',
+                name: 'Magnetic Stirrer',
+                introduction: 'Magnetic stirrer detection module for identifying laboratory stirring and mixing equipment. Essential for detecting laboratory apparatus and chemical processing equipment.',
+                introduction_detail: 'The magnetic stirrer detection system identifies stirring plates, hot plates with magnetic stirrers, and mixing equipment used in laboratories and research environments. This is valuable for laboratory audits, equipment tracking, and identifying chemistry lab infrastructure.',
+                advantages: [
+                    'Accurate detection of stirring equipment',
+                    'Identifies various magnetic stirrer types',
+                    'Works with different plate sizes and models',
+                    'Effective for laboratory equipment audits',
+                    'Real-time detection for inventory tracking'
+                ],
+                disadvantages: [
+                    'May confuse with similar heating plates',
+                    'Detection affected by placed samples and glassware',
+                    'Performance varies with lighting conditions',
+                    'Reflective surfaces can reduce accuracy'
+                ],
+                how_it_works: 'Magnetic stirrer detection uses YOLOv8 trained on laboratory equipment datasets. The model learns distinctive stirrer features including heating plates, control interfaces, display panels, and magnetic coils. The system employs multi-scale detection for reliable identification.',
+                tutorial_video: 'https://www.youtube.com/embed/dQw4w9WgXcQ'
+            },
+            'ph_meter': {
+                icon: 'fas fa-droplet',
+                name: 'pH Meter',
+                introduction: 'pH meter detection module for identifying acidity and alkalinity measurement devices. Essential for detecting laboratory analytical equipment and chemical testing instruments.',
+                introduction_detail: 'The pH meter detection system identifies pH measurement devices used in laboratories, water quality testing, and chemical analysis. This is valuable for laboratory equipment audits, quality control monitoring, and identifying aqueous testing infrastructure.',
+                advantages: [
+                    'High accuracy in pH meter detection',
+                    'Identifies various pH meter types and models',
+                    'Works with analog and digital displays',
+                    'Effective for laboratory equipment assessment',
+                    'Real-time detection for equipment monitoring'
+                ],
+                disadvantages: [
+                    'Small measurement displays reduce visibility',
+                    'May confuse with similar testing instruments',
+                    'Performance varies with measurement probe design',
+                    'Reflections on electrode tips can affect detection'
+                ],
+                how_it_works: 'pH meter detection uses YOLOv8 trained on analytical instrument datasets. The model learns distinctive pH meter features including measurement probes, display panels, electrode holders, and calibration controls. Multi-scale detection enables reliable identification across laboratory environments.',
+                tutorial_video: 'https://www.youtube.com/embed/dQw4w9WgXcQ'
+            }
+        };
+
+        // DOM Elements
+        const startBtn = document.getElementById('start-btn');
+        const stopBtn = document.getElementById('stop-btn');
+        const snapshotBtn = document.getElementById('snapshot-btn');
+        const videoFeed = document.getElementById('video-feed');
+        const videoPlaceholder = document.getElementById('video-placeholder');
+        const statusDot = document.getElementById('status-dot');
+        const statusText = document.getElementById('status-text');
+        const componentModal = document.getElementById('componentModal');
+        
+        // Track detected components to keep buttons visible
+        let detectedComponentsHistory = new Set();
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            startBtn.addEventListener('click', startDetection);
+            stopBtn.addEventListener('click', stopDetection);
+            snapshotBtn.addEventListener('click', captureSnapshot);
+            // Close modal when clicking outside
+            componentModal.addEventListener('click', function(e) {
+                if (e.target === componentModal) {
+                    closeComponentModal();
+                }
+            });
+            checkServerHealth();
+        });
+
+        async function checkServerHealth() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/health`);
+                if (response.ok) {
+                    console.log('Server is healthy');
+                }
+            } catch (error) {
+                showAlert('Cannot connect to server. Make sure it\'s running on port 5000.', 'error');
+            }
+        }
+
+        async function startDetection() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/start`, { method: 'POST' });
+                if (!response.ok) throw new Error('Failed to start');
+
+                isDetectionRunning = true;
+                videoFeed.src = `${API_BASE_URL}/video_feed`;
+                videoFeed.style.display = 'block';
+                videoPlaceholder.style.display = 'none';
+                
+                startBtn.disabled = true;
+                stopBtn.disabled = false;
+                snapshotBtn.disabled = false;
+                
+                statusDot.classList.add('active');
+                statusText.textContent = 'Running';
+                
+                startStatsUpdate();
+                showAlert('Detection started!', 'success');
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('Failed to start detection', 'error');
+            }
+        }
+
+        async function stopDetection() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/stop`, { method: 'POST' });
+                if (!response.ok) throw new Error('Failed to stop');
+
+                isDetectionRunning = false;
+                videoFeed.src = '';
+                videoFeed.style.display = 'none';
+                videoPlaceholder.style.display = 'block';
+                
+                startBtn.disabled = false;
+                stopBtn.disabled = true;
+                snapshotBtn.disabled = true;
+                
+                statusDot.classList.remove('active');
+                statusText.textContent = 'Stopped';
+                
+                if (statsInterval) clearInterval(statsInterval);
+                showAlert('Detection stopped', 'warning');
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('Failed to stop detection', 'error');
+            }
+        }
+
+        function startStatsUpdate() {
+            if (statsInterval) clearInterval(statsInterval);
+            statsInterval = setInterval(updateStats, 500);
+            updateStats();
+        }
+
+        async function updateStats() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/stats`);
+                const stats = await response.json();
+
+                document.getElementById('inference-time').textContent = stats.inference_time.toFixed(2) + ' ms';
+                document.getElementById('fps').textContent = stats.fps;
+                document.getElementById('cpu-usage').textContent = stats.cpu_usage.toFixed(1) + '%';
+                document.getElementById('memory-usage').textContent = stats.memory_usage.toFixed(1) + '%';
+                document.getElementById('total-detections').textContent = stats.total_detections;
+
+                updateDetectedClasses(stats.detected_classes);
+            } catch (error) {
+                console.error('Error fetching stats:', error);
+            }
+        }
+
+        function updateDetectedClasses(classes) {
+            const container = document.getElementById('detected-classes');
+            const infoButtonsContainer = document.getElementById('info-buttons-container');
+            const infoBtnSection = document.getElementById('info-button-section');
+            
+            container.innerHTML = '';
+            
+            // Helper function to normalize class names for database lookup
+            // Converts "pH Meter" -> "ph_meter", "Magnetic Stirrer" -> "magnetic_stirrer"
+            function normalizeClassName(name) {
+                return name.toLowerCase().replace(/\s+/g, '_');
+            }
+            
+            // Add newly detected components to history
+            Object.keys(classes).forEach(className => {
+                detectedComponentsHistory.add(normalizeClassName(className));
+            });
+
+            // Show current detections
+            if (Object.keys(classes).length === 0) {
+                container.innerHTML = '<p style="color: #a0aec0; font-size: 0.9rem; text-align: center;">No detections yet</p>';
+            } else {
+                for (const [className, count] of Object.entries(classes)) {
+                    const badge = document.createElement('div');
+                    badge.className = 'class-badge';
+                    
+                    const classKey = normalizeClassName(className);
+                    const component = componentsDatabase[classKey];
+                    
+                    if (component) {
+                        badge.innerHTML = `
+                            <div class="class-badge-content">
+                                <div class="class-badge-icon">
+                                    <i class="${component.icon}"></i>
+                                </div>
+                                <div class="class-badge-text">
+                                    <div class="class-badge-name">${className}</div>
+                                    <div class="class-badge-action">
+                                        <i class="fas fa-check-circle"></i> Detected
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="count">${count}</span>
+                        `;
+                    } else {
+                        badge.innerHTML = `
+                            <div class="class-badge-content">
+                                <div class="class-badge-text">
+                                    <div class="class-badge-name">${className}</div>
+                                </div>
+                            </div>
+                            <span class="count">${count}</span>
+                        `;
+                        badge.style.opacity = '0.6';
+                    }
+                    
+                    container.appendChild(badge);
+                }
+            }
+
+            // ALWAYS show the Learn More buttons section (never hide it)
+            infoBtnSection.style.display = 'block';
+            
+            // Update buttons based on history, not current detections
+            infoButtonsContainer.innerHTML = '';
+            
+            if (detectedComponentsHistory.size === 0) {
+                // Hide section if nothing has been detected ever
+                infoBtnSection.style.display = 'none';
+            } else {
+                // Create buttons for all components ever detected
+                detectedComponentsHistory.forEach(classKey => {
+                    const component = componentsDatabase[classKey];
+                    if (component) {
+                        const button = document.createElement('a');
+                        button.href = `/component_${classKey}`;
+                        button.className = 'info-button';
+                        button.innerHTML = `
+                            <i class="${component.icon}"></i>
+                            <span>${component.name} Info & Video</span>
+                            <i class="fas fa-arrow-right" style="margin-left: auto; font-size: 0.9rem;"></i>
+                        `;
+                        infoButtonsContainer.appendChild(button);
+                    }
+                });
+            }
+        }
+
+        function showComponentModal(componentKey) {
+            const component = componentsDatabase[componentKey];
+            if (!component) {
+                showAlert('Component information not available', 'warning');
+                return;
+            }
+
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.getElementById('modalBody');
+            const modalIcon = document.getElementById('modalIcon');
+
+            // Set title and icon
+            modalIcon.innerHTML = `<i class="${component.icon}"></i>`;
+            modalTitle.innerHTML = `<span class="icon-circle"><i class="${component.icon}"></i></span> ${component.name}`;
+
+            // Build content
+            let content = `
+                <div class="modal-section">
+                    <h3><i class="fas fa-info-circle"></i> Introduction</h3>
+                    <p>${component.introduction}</p>
+                    <p>${component.introduction_detail}</p>
+                </div>
+
+                <div class="modal-section">
+                    <h3><i class="fas fa-thumbs-up"></i> Advantages</h3>
+                    <ul class="advantages-list">
+            `;
+
+            component.advantages.forEach(adv => {
+                content += `<li>${adv}</li>`;
+            });
+
+            content += `
+                    </ul>
+                </div>
+
+                <div class="modal-section">
+                    <h3><i class="fas fa-thumbs-down"></i> Disadvantages</h3>
+                    <ul class="disadvantages-list">
+            `;
+
+            component.disadvantages.forEach(dis => {
+                content += `<li>${dis}</li>`;
+            });
+
+            content += `
+                    </ul>
+                </div>
+
+                <div class="modal-section">
+                    <h3><i class="fas fa-cog"></i> How It Works</h3>
+                    <p>${component.how_it_works}</p>
+                </div>
+
+                <div class="modal-section">
+                    <h3><i class="fas fa-video"></i> Tutorial Video</h3>
+                    <div class="video-embed">
+                        <iframe src="${component.tutorial_video}?rel=0" allowfullscreen="" loading="lazy"></iframe>
+                    </div>
+                </div>
+            `;
+
+            modalBody.innerHTML = content;
+            componentModal.classList.add('active');
+        }
+
+        function closeComponentModal() {
+            const componentModal = document.getElementById('componentModal');
+            componentModal.classList.remove('active');
+        }
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeComponentModal();
+            }
+        });
+
+        function captureSnapshot() {
+            if (!isDetectionRunning) {
+                showAlert('Start detection first', 'warning');
+                return;
+            }
+
+            const canvas = document.createElement('canvas');
+            canvas.width = 1280;
+            canvas.height = 720;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(videoFeed, 0, 0);
+
+            canvas.toBlob((blob) => {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `ibcrs-snapshot-${new Date().getTime()}.jpg`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                showAlert('Snapshot captured!', 'success');
+            });
+        }
+
+        function showAlert(message, type = 'info') {
+            const alert = document.createElement('div');
+            alert.className = `alert ${type}`;
+            alert.textContent = message;
+            document.body.appendChild(alert);
+
+            setTimeout(() => {
+                alert.remove();
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
