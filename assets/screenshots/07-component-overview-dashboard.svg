@@ -1,0 +1,130 @@
+<svg viewBox="0 0 1000 700" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1000" height="700" fill="#0f1419"/>
+  
+  <!-- Navbar -->
+  <rect x="0" y="0" width="1000" height="50" fill="#0a0e1a" stroke="#0066ff" stroke-width="1"/>
+  <text x="25" y="32" font-size="18" fill="#00d4ff" font-weight="bold">🧬 IBCRS</text>
+  <text x="70" y="32" font-size="13" fill="#a0aec0">Intelligent BioTech Component Recognition System</text>
+  
+  <!-- Title -->
+  <text x="500" y="85" font-size="16" fill="#00d4ff" font-weight="bold" text-anchor="middle">Component Recognition Overview</text>
+  
+  <!-- Left Column: Detection Classes (3 items) -->
+  <text x="50" y="115" font-size="13" fill="#00d4ff" font-weight="bold">Dataset Components</text>
+  
+  <!-- Camera Card -->
+  <rect x="30" y="130" width="280" height="160" fill="#1a1f2e" stroke="#10b981" stroke-width="2" rx="8"/>
+  <rect x="40" y="140" width="260" height="35" fill="rgba(16,185,129,0.2)" rx="5"/>
+  <text x="170" y="165" font-size="14" fill="#10b981" font-weight="bold" text-anchor="middle">📷 Camera</text>
+  <text x="50" y="190" font-size="10" fill="#a0aec0">Purpose:</text>
+  <text x="50" y="205" font-size="9" fill="#72829e">Visual image capture & monitoring</text>
+  <text x="50" y="225" font-size="10" fill="#a0aec0">Detections:</text>
+  <text x="175" y="225" font-size="10" fill="#10b981" font-weight="bold">45 times</text>
+  <text x="50" y="245" font-size="10" fill="#a0aec0">Latest Confidence:</text>
+  <text x="175" y="245" font-size="10" fill="#f59e0b" font-weight="bold">0.95</text>
+  <text x="50" y="265" font-size="9" fill="#0066ff" text-decoration="underline">Learn More →</text>
+  
+  <!-- DroneRx Card -->
+  <rect x="30" y="310" width="280" height="160" fill="#1a1f2e" stroke="#f59e0b" stroke-width="2" rx="8"/>
+  <rect x="40" y="320" width="260" height="35" fill="rgba(245,158,11,0.2)" rx="5"/>
+  <text x="170" y="345" font-size="14" fill="#f59e0b" font-weight="bold" text-anchor="middle">🛰️ Drone Receiver</text>
+  <text x="50" y="370" font-size="10" fill="#a0aec0">Purpose:</text>
+  <text x="50" y="385" font-size="9" fill="#72829e">Drone RF signal reception & control</text>
+  <text x="50" y="405" font-size="10" fill="#a0aec0">Detections:</text>
+  <text x="175" y="405" font-size="10" fill="#f59e0b" font-weight="bold">32 times</text>
+  <text x="50" y="425" font-size="10" fill="#a0aec0">Latest Confidence:</text>
+  <text x="175" y="425" font-size="10" fill="#f59e0b" font-weight="bold">0.92</text>
+  <text x="50" y="445" font-size="9" fill="#0066ff" text-decoration="underline">Learn More →</text>
+  
+  <!-- PIR Card -->
+  <rect x="30" y="490" width="280" height="160" fill="#1a1f2e" stroke="#06b6d4" stroke-width="2" rx="8"/>
+  <rect x="40" y="500" width="260" height="35" fill="rgba(6,182,212,0.2)" rx="5"/>
+  <text x="170" y="525" font-size="14" fill="#06b6d4" font-weight="bold" text-anchor="middle">💡 PIR Sensor</text>
+  <text x="50" y="550" font-size="10" fill="#a0aec0">Purpose:</text>
+  <text x="50" y="565" font-size="9" fill="#72829e">Motion detection & thermal sensing</text>
+  <text x="50" y="585" font-size="10" fill="#a0aec0">Detections:</text>
+  <text x="175" y="585" font-size="10" fill="#06b6d4" font-weight="bold">28 times</text>
+  <text x="50" y="605" font-size="10" fill="#a0aec0">Latest Confidence:</text>
+  <text x="175" y="605" font-size="10" fill="#f59e0b" font-weight="bold">0.88</text>
+  <text x="50" y="625" font-size="9" fill="#0066ff" text-decoration="underline">Learn More →</text>
+  
+  <!-- Middle Column: Bio-Equipment (2 items) -->
+  <text x="380" y="115" font-size="13" fill="#00d4ff" font-weight="bold">Laboratory Equipment</text>
+  
+  <!-- Colorimeter Card -->
+  <rect x="360" y="130" width="280" height="160" fill="#1a1f2e" stroke="#8b5cf6" stroke-width="2" rx="8"/>
+  <rect x="370" y="140" width="260" height="35" fill="rgba(139,92,246,0.2)" rx="5"/>
+  <text x="500" y="165" font-size="14" fill="#8b5cf6" font-weight="bold" text-anchor="middle">🧪 Colorimeter</text>
+  <text x="380" y="190" font-size="10" fill="#a0aec0">Purpose:</text>
+  <text x="380" y="205" font-size="9" fill="#72829e">Measures light absorption & color</text>
+  <text x="380" y="225" font-size="10" fill="#a0aec0">Detections:</text>
+  <text x="505" y="225" font-size="10" fill="#8b5cf6" font-weight="bold">15 times</text>
+  <text x="380" y="245" font-size="10" fill="#a0aec0">Latest Confidence:</text>
+  <text x="505" y="245" font-size="10" fill="#f59e0b" font-weight="bold">0.85</text>
+  <text x="380" y="265" font-size="9" fill="#0066ff" text-decoration="underline">Learn More →</text>
+  
+  <!-- Magnetic Stirrer Card -->
+  <rect x="360" y="310" width="280" height="160" fill="#1a1f2e" stroke="#ec4899" stroke-width="2" rx="8"/>
+  <rect x="370" y="320" width="260" height="35" fill="rgba(236,72,153,0.2)" rx="5"/>
+  <text x="500" y="345" font-size="14" fill="#ec4899" font-weight="bold" text-anchor="middle">🔧 Magnetic Stirrer</text>
+  <text x="380" y="370" font-size="10" fill="#a0aec0">Purpose:</text>
+  <text x="380" y="385" font-size="9" fill="#72829e">Stirs & mixes liquid samples</text>
+  <text x="380" y="405" font-size="10" fill="#a0aec0">Detections:</text>
+  <text x="505" y="405" font-size="10" fill="#ec4899" font-weight="bold">18 times</text>
+  <text x="380" y="425" font-size="10" fill="#a0aec0">Latest Confidence:</text>
+  <text x="505" y="425" font-size="10" fill="#f59e0b" font-weight="bold">0.83</text>
+  <text x="380" y="445" font-size="9" fill="#0066ff" text-decoration="underline">Learn More →</text>
+  
+  <!-- pH Meter Card -->
+  <rect x="360" y="490" width="280" height="160" fill="#1a1f2e" stroke="#14b8a6" stroke-width="2" rx="8"/>
+  <rect x="370" y="500" width="260" height="35" fill="rgba(20,184,166,0.2)" rx="5"/>
+  <text x="500" y="525" font-size="14" fill="#14b8a6" font-weight="bold" text-anchor="middle">💧 pH Meter</text>
+  <text x="380" y="550" font-size="10" fill="#a0aec0">Purpose:</text>
+  <text x="380" y="565" font-size="9" fill="#72829e">Measures pH (acidity) of solutions</text>
+  <text x="380" y="585" font-size="10" fill="#a0aec0">Detections:</text>
+  <text x="505" y="585" font-size="10" fill="#14b8a6" font-weight="bold">12 times</text>
+  <text x="380" y="605" font-size="10" fill="#a0aec0">Latest Confidence:</text>
+  <text x="505" y="605" font-size="10" fill="#f59e0b" font-weight="bold">0.82</text>
+  <text x="380" y="625" font-size="9" fill="#0066ff" text-decoration="underline">Learn More →</text>
+  
+  <!-- Right Column: Additional Components (2 items) -->
+  <text x="710" y="115" font-size="13" fill="#00d4ff" font-weight="bold">Specialized Sensors</text>
+  
+  <!-- Sonar Card -->
+  <rect x="690" y="130" width="280" height="160" fill="#1a1f2e" stroke="#8b5cf6" stroke-width="2" rx="8"/>
+  <rect x="700" y="140" width="260" height="35" fill="rgba(139,92,246,0.2)" rx="5"/>
+  <text x="830" y="165" font-size="14" fill="#8b5cf6" font-weight="bold" text-anchor="middle">📡 Sonar Sensor</text>
+  <text x="710" y="190" font-size="10" fill="#a0aec0">Purpose:</text>
+  <text x="710" y="205" font-size="9" fill="#72829e">Ultrasonic distance measurement</text>
+  <text x="710" y="225" font-size="10" fill="#a0aec0">Detections:</text>
+  <text x="835" y="225" font-size="10" fill="#8b5cf6" font-weight="bold">20 times</text>
+  <text x="710" y="245" font-size="10" fill="#a0aec0">Latest Confidence:</text>
+  <text x="835" y="245" font-size="10" fill="#f59e0b" font-weight="bold">0.87</text>
+  <text x="710" y="265" font-size="9" fill="#0066ff" text-decoration="underline">Learn More →</text>
+  
+  <!-- System Statistics Box -->
+  <rect x="690" y="310" width="280" height="340" fill="#1a1f2e" stroke="#0066ff" stroke-width="2" rx="8"/>
+  <text x="830" y="335" font-size="12" fill="#00d4ff" font-weight="bold" text-anchor="middle">System Statistics</text>
+  
+  <!-- Stat Items -->
+  <rect x="710" y="355" width="240" height="40" fill="rgba(0,102,255,0.1)" rx="5"/>
+  <text x="725" y="375" font-size="10" fill="#a0aec0">Total Detections</text>
+  <text x="825" y="375" font-size="14" fill="#00d4ff" font-weight="bold" text-anchor="end">170</text>
+  
+  <rect x="710" y="405" width="240" height="40" fill="rgba(0,102,255,0.1)" rx="5"/>
+  <text x="725" y="425" font-size="10" fill="#a0aec0">Unique Components</text>
+  <text x="825" y="425" font-size="14" fill="#00d4ff" font-weight="bold" text-anchor="end">7</text>
+  
+  <rect x="710" y="455" width="240" height="40" fill="rgba(0,102,255,0.1)" rx="5"/>
+  <text x="725" y="475" font-size="10" fill="#a0aec0">Avg Confidence</text>
+  <text x="825" y="475" font-size="14" fill="#00d4ff" font-weight="bold" text-anchor="end">0.89</text>
+  
+  <rect x="710" y="505" width="240" height="40" fill="rgba(0,102,255,0.1)" rx="5"/>
+  <text x="725" y="525" font-size="10" fill="#a0aec0">Uptime</text>
+  <text x="825" y="525" font-size="14" fill="#00d4ff" font-weight="bold" text-anchor="end">2h 15m</text>
+  
+  <rect x="710" y="555" width="240" height="40" fill="rgba(0,102,255,0.1)" rx="5"/>
+  <text x="725" y="575" font-size="10" fill="#a0aec0">Model Version</text>
+  <text x="825" y="575" font-size="14" fill="#00d4ff" font-weight="bold" text-anchor="end">YOLOv8n</text>
+</svg>

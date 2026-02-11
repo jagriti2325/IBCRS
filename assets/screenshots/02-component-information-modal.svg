@@ -1,0 +1,40 @@
+<svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background with blur effect -->
+  <rect width="800" height="600" fill="rgba(15,20,25,0.8)"/>
+  
+  <!-- Modal Box -->
+  <rect x="100" y="80" width="600" height="480" fill="#1a1f2e" stroke="#0066ff" stroke-width="2" rx="12"/>
+  
+  <!-- Modal Header -->
+  <rect x="100" y="80" width="600" height="70" fill="linear-gradient(135deg, rgba(0,102,255,0.15), rgba(0,212,255,0.1))" rx="12"/>
+  <text x="400" y="85" font-size="12" fill="#a0aec0" text-anchor="middle">Component Information</text>
+  <text x="130" y="125" font-size="28" fill="#0066ff">📷 Camera Detection (Cam)</text>
+  
+  <!-- Introduction Section -->
+  <text x="120" y="170" font-size="13" fill="#00d4ff" font-weight="bold">ℹ️ Introduction</text>
+  <text x="120" y="190" font-size="11" fill="#b0b8c0">Camera detection module for identifying optical cameras and lens-based</text>
+  <text x="120" y="205" font-size="11" fill="#b0b8c0">imaging devices. Used for security system detection and surveillance</text>
+  <text x="120" y="220" font-size="11" fill="#b0b8c0">equipment recognition.</text>
+  
+  <!-- Advantages Section -->
+  <text x="120" y="245" font-size="13" fill="#00d4ff" font-weight="bold">✓ Advantages</text>
+  <rect x="120" y="255" width="560" height="70" fill="rgba(16,185,129,0.1)" stroke="#10b981" stroke-width="1" rx="5"/>
+  
+  <text x="135" y="273" font-size="11" fill="#b0b8c0">✓ Accurate detection of various camera types</text>
+  <text x="135" y="290" font-size="11" fill="#b0b8c0">✓ Works with different camera angles and positions</text>
+  <text x="135" y="307" font-size="11" fill="#b0b8c0">✓ Can identify hidden and exposed cameras</text>
+  
+  <!-- Disadvantages Section -->
+  <text x="120" y="345" font-size="13" fill="#00d4ff" font-weight="bold">⚠ Disadvantages</text>
+  <rect x="120" y="355" width="560" height="55" fill="rgba(239,68,68,0.1)" stroke="#ef4444" stroke-width="1" rx="5"/>
+  
+  <text x="135" y="373" font-size="11" fill="#b0b8c0">⚠ May confuse similar lens-based objects</text>
+  <text x="135" y="390" font-size="11" fill="#b0b8c0">⚠ Small cameras harder to detect</text>
+  
+  <!-- Close Button -->
+  <rect x="680" y="90" width="30" height="30" fill="rgba(239,68,68,0.3)" rx="3"/>
+  <text x="695" y="108" font-size="18" fill="#ef4444" text-anchor="middle" font-weight="bold">✕</text>
+  
+  <!-- Footer -->
+  <text x="400" y="590" font-size="10" fill="#a0aec0" text-anchor="middle">Click "Learn More" to view the full component guide page</text>
+</svg>
