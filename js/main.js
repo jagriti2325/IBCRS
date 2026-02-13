@@ -3,19 +3,77 @@ const API_BASE_URL = 'http://localhost:5000';
 const STATS_UPDATE_INTERVAL = 500; // ms
 let statsInterval = null;
 let isDetectionRunning = false;
+let mediaStream = null;
+let frameCount = 0;
+let detectionCount = 0;
+let startTime = null;
+
+// Equipment mapping for component pages
+const equipmentMapping = {
+    'Camera': 'component_cam.html',
+    'Cam': 'component_cam.html',
+    'camera': 'component_cam.html',
+    'cam': 'component_cam.html',
+    'Colorimeter': 'component_colorimeter.html',
+    'colorimeter': 'component_colorimeter.html',
+    'DroneRx': 'component_dronerx.html',
+    'Drone': 'component_dronerx.html',
+    'drone': 'component_dronerx.html',
+    'dronerx': 'component_dronerx.html',
+    'Magnetic Stirrer': 'component_magnetic_stirrer.html',
+    'Stirrer': 'component_magnetic_stirrer.html',
+    'stirrer': 'component_magnetic_stirrer.html',
+    'pH Meter': 'component_ph_meter.html',
+    'pH': 'component_ph_meter.html',
+    'ph meter': 'component_ph_meter.html',
+    'PIR': 'component_pir.html',
+    'pir': 'component_pir.html',
+    'Sonar': 'component_sonar.html',
+    'sonar': 'component_sonar.html'
+};
 
 // ============ DOM ELEMENTS ============
-const videoFeed = document.getElementById('video-feed');
-const startBtn = document.getElementById('start-btn');
-const stopBtn = document.getElementById('stop-btn');
-const snapshotBtn = document.getElementById('snapshot-btn');
-const statusIndicator = document.getElementById('status-indicator');
-const statusText = document.getElementById('status-text');
-const loadingSpinner = document.getElementById('loading-spinner');
-const navLinks = document.querySelectorAll('.nav-link');
+let videoFeed;
+let webcamFeed;
+let detectionCanvas;
+let startBtn;
+let stopBtn;
+let startWebcamBtn;
+let stopWebcamBtn;
+let snapshotBtn;
+let statusIndicator;
+let statusText;
+let detectionStatus;
+let frameCountDisplay;
+let detectionCountDisplay;
+let fpsCounter;
+let detectionResults;
+let loadingSpinner;
+let navLinks;
 
 // ============ INITIALIZATION ============
+function initializeDOMElements() {
+    videoFeed = document.getElementById('video-feed');
+    webcamFeed = document.getElementById('webcam-feed');
+    detectionCanvas = document.getElementById('detection-canvas');
+    startBtn = document.getElementById('start-btn');
+    stopBtn = document.getElementById('stop-btn');
+    startWebcamBtn = document.getElementById('start-webcam-btn');
+    stopWebcamBtn = document.getElementById('stop-webcam-btn');
+    snapshotBtn = document.getElementById('snapshot-btn');
+    statusIndicator = document.getElementById('status-indicator');
+    statusText = document.getElementById('status-text');
+    detectionStatus = document.getElementById('detection-status');
+    frameCountDisplay = document.getElementById('frame-count');
+    detectionCountDisplay = document.getElementById('detection-count');
+    fpsCounter = document.getElementById('fps-counter');
+    detectionResults = document.getElementById('detection-results');
+    loadingSpinner = document.getElementById('loading-spinner');
+    navLinks = document.querySelectorAll('.nav-link');
+}
+
 document.addEventListener('DOMContentLoaded', function() {
+    initializeDOMElements();
     initializeEventListeners();
     checkServerHealth();
     setupNavigation();
@@ -23,9 +81,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // ============ EVENT LISTENERS ============
 function initializeEventListeners() {
-    startBtn.addEventListener('click', startDetection);
-    stopBtn.addEventListener('click', stopDetection);
-    snapshotBtn.addEventListener('click', captureSnapshot);
+    if (startBtn) startBtn.addEventListener('click', startDetection);
+    if (stopBtn) stopBtn.addEventListener('click', stopDetection);
+    if (snapshotBtn) snapshotBtn.addEventListener('click', captureSnapshot);
+    if (startWebcamBtn) startWebcamBtn.addEventListener('click', startWebcam);
+    if (stopWebcamBtn) stopWebcamBtn.addEventListener('click', stopWebcam);
 }
 
 function setupNavigation() {
@@ -264,13 +324,13 @@ function updateDetectedClasses(classes) {
 // ============ UI HELPERS ============
 function updateUIState() {
     if (isDetectionRunning) {
-        startBtn.disabled = true;
-        stopBtn.disabled = false;
-        snapshotBtn.disabled = false;
+        if (startBtn) startBtn.disabled = true;
+        if (stopBtn) stopBtn.disabled = false;
+        if (snapshotBtn) snapshotBtn.disabled = false;
     } else {
-        startBtn.disabled = false;
-        stopBtn.disabled = true;
-        snapshotBtn.disabled = true;
+        if (startBtn) startBtn.disabled = false;
+        if (stopBtn) stopBtn.disabled = true;
+        if (snapshotBtn) snapshotBtn.disabled = true;
     }
 }
 
@@ -329,6 +389,247 @@ function showAlert(message, type = 'info') {
     }, 3000);
 }
 
+// ============ WEBCAM DETECTION FUNCTIONS ============
+async function startWebcam() {
+    try {
+        console.log('Starting webcam...');
+        
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            console.error('Webcam not supported');
+            showAlert('Webcam not supported in this browser', 'error');
+            return;
+        }
+
+        console.log('Requesting camera access...');
+        // Request camera access
+        mediaStream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } },
+            audio: false
+        });
+
+        console.log('Camera access granted, setting srcObject...');
+        // Set video source
+        if (!webcamFeed) {
+            console.error('webcamFeed element not found');
+            showAlert('Error: Video element not found', 'error');
+            return;
+        }
+        
+        webcamFeed.srcObject = mediaStream;
+        
+        // Wait for video to be ready
+        await new Promise((resolve) => {
+            webcamFeed.onloadedmetadata = () => {
+                console.log('Video metadata loaded');
+                resolve();
+            };
+        });
+        
+        // Update UI
+        isDetectionRunning = true;
+        if (startWebcamBtn) startWebcamBtn.style.display = 'none';
+        if (stopWebcamBtn) stopWebcamBtn.style.display = 'flex';
+        
+        if (detectionStatus) {
+            detectionStatus.innerHTML = '<span style="color: #10b981;"><i class="fas fa-circle"></i> Online</span>';
+        }
+
+        startTime = Date.now();
+        frameCount = 0;
+        detectionCount = 0;
+        
+        console.log('Webcam ready, starting frame processing...');
+        showAlert('Webcam started. Processing frames...', 'success');
+        
+        // Start sending frames to API
+        processFrames();
+        
+    } catch (error) {
+        console.error('Error accessing webcam:', error);
+        console.error('Error name:', error.name);
+        console.error('Error message:', error.message);
+        
+        let errorMsg = error.message;
+        
+        // Handle common webcam access errors
+        if (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError') {
+            errorMsg = 'Webcam access denied. Please check:1) Browser permissions, 2) Site is trusted, 3) No other app is using the camera';
+        } else if (error.name === 'NotFoundError' || error.name === 'DevicesNotFoundError') {
+            errorMsg = 'No camera device found. Make sure your webcam is connected.';
+        } else if (error.name === 'NotReadableError' || error.name === 'TrackStartError') {
+            errorMsg = 'Camera is in use by another application. Close other apps using the camera.';
+        } else if (error.name === 'SecurityError') {
+            errorMsg = 'Security error: Website must be served over HTTPS or localhost to access webcam.';
+        }
+        
+        showAlert('Error accessing webcam: ' + errorMsg, 'error');
+        isDetectionRunning = false;
+    }
+}
+
+function stopWebcam() {
+    if (mediaStream) {
+        mediaStream.getTracks().forEach(track => track.stop());
+        mediaStream = null;
+    }
+    
+    isDetectionRunning = false;
+    startWebcamBtn.style.display = 'flex';
+    stopWebcamBtn.style.display = 'none';
+    
+    if (detectionStatus) {
+        detectionStatus.innerHTML = '<span style="color: #ef4444;"><i class="fas fa-circle"></i> Offline</span>';
+    }
+    
+    showAlert('Webcam stopped', 'info');
+}
+
+async function processFrames() {
+    if (!isDetectionRunning || !webcamFeed.srcObject) {
+        console.log('Processing stopped: isDetectionRunning=' + isDetectionRunning + ', srcObject=' + (webcamFeed.srcObject ? 'set' : 'null'));
+        return;
+    }
+
+    try {
+        // Get canvas context
+        if (!detectionCanvas) {
+            console.log('Canvas not found, retrying...');
+            setTimeout(processFrames, 100);
+            return;
+        }
+
+        detectionCanvas.width = webcamFeed.videoWidth;
+        detectionCanvas.height = webcamFeed.videoHeight;
+        
+        if (detectionCanvas.width === 0 || detectionCanvas.height === 0) {
+            console.log('Video dimensions not ready: ' + detectionCanvas.width + 'x' + detectionCanvas.height);
+            setTimeout(processFrames, 100);
+            return;
+        }
+
+        const ctx = detectionCanvas.getContext('2d');
+        ctx.drawImage(webcamFeed, 0, 0);
+        
+        // Convert to base64 JPEG
+        const imageData = detectionCanvas.toDataURL('image/jpeg', 0.8);
+        
+        // Send to API
+        await detectFrame(imageData);
+        
+        frameCount++;
+        if (frameCountDisplay) frameCountDisplay.textContent = frameCount;
+        
+        // Update FPS
+        const elapsed = (Date.now() - startTime) / 1000;
+        if (fpsCounter && elapsed > 0) {
+            fpsCounter.textContent = Math.round(frameCount / elapsed);
+        }
+        
+        // Continue processing
+        setTimeout(processFrames, 100); // Process every 100ms
+        
+    } catch (error) {
+        console.error('Error processing frame:', error);
+        if (isDetectionRunning) {
+            setTimeout(processFrames, 100);
+        }
+    }
+}
+
+async function detectFrame(imageData) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/detect`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ image: imageData })
+        });
+
+        if (!response.ok) {
+            if (response.status === 404) {
+                // Try alternative endpoint
+                return detectFrameAltEndpoint(imageData);
+            }
+            throw new Error(`API returned status ${response.status}`);
+        }
+
+        const detections = await response.json();
+        
+        if (detections && detections.length > 0) {
+            displayDetections(detections);
+        }
+        
+    } catch (error) {
+        console.error('Detection error:', error);
+    }
+}
+
+async function detectFrameAltEndpoint(imageData) {
+    try {
+        // Try the endpoint from Flask backend
+        const response = await fetch(`${API_BASE_URL}/api/predict`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ image: imageData })
+        });
+
+        if (response.ok) {
+            const detections = await response.json();
+            if (detections && detections.length > 0) {
+                displayDetections(detections);
+            }
+        }
+    } catch (error) {
+        console.error('Alt endpoint error:', error);
+    }
+}
+
+function displayDetections(detections) {
+    detectionCount = detections.length;
+    if (detectionCountDisplay) detectionCountDisplay.textContent = detectionCount;
+    
+    if (detectionResults) {
+        if (detections.length === 0) {
+            detectionResults.innerHTML = '<p style="color: #a0aec0; text-align: center; margin: 2rem 0;">No detections</p>';
+            return;
+        }
+
+        let html = '<div style="display: flex; flex-direction: column; gap: 0.8rem;">';
+        
+        detections.forEach(det => {
+            const confidence = (det.confidence * 100).toFixed(1);
+            const label = det.class || det.label || 'Unknown';
+            
+            html += `
+                <div style="background: rgba(0, 102, 255, 0.2); padding: 0.8rem; border-radius: 6px; border-left: 3px solid #0066ff; cursor: pointer; transition: all 0.3s ease;" 
+                     onmouseover="this.style.background='rgba(0, 102, 255, 0.4)';" 
+                     onmouseout="this.style.background='rgba(0, 102, 255, 0.2)';"
+                     onclick="openEquipmentDetail('${label}')">
+                    <div style="font-weight: 600; color: #00d4ff; font-size: 1rem; margin-bottom: 0.3rem;"><i class="fas fa-check-circle"></i> ${label}</div>
+                    <div style="color: #a0aec0; font-size: 0.9rem;">Confidence: <strong style="color: #10b981;">${confidence}%</strong></div>
+                </div>
+            `;
+        });
+        
+        html += '</div>';
+        detectionResults.innerHTML = html;
+    }
+}
+
+function openEquipmentDetail(label) {
+    // Find the matching component page
+    const componentPage = equipmentMapping[label] || equipmentMapping[label.toLowerCase()];
+    
+    if (componentPage) {
+        window.location.href = componentPage;
+    } else {
+        showAlert(`No component page found for ${label}`, 'warning');
+    }
+}
+
 // ============ SERVER HEALTH CHECK ============
 async function checkServerHealth() {
     try {
@@ -381,6 +682,32 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+
+// ============ SECTION NAVIGATION ============
+function showSection(sectionId) {
+    const sections = document.querySelectorAll('.section');
+    sections.forEach(section => {
+        section.classList.remove('active');
+    });
+    
+    const navLinks = document.querySelectorAll('.nav-link');
+    navLinks.forEach(link => {
+        link.classList.remove('active');
+    });
+    
+    const targetSection = document.getElementById(sectionId);
+    if (targetSection) {
+        targetSection.classList.add('active');
+    }
+    
+    // Add active state to clicked nav link
+    const activeLink = document.querySelector(`.nav-link[onclick*="'${sectionId}'"]`);
+    if (activeLink) {
+        activeLink.classList.add('active');
+    }
+    
+    window.scrollTo(0, 0);
+}
 
 // ============ INITIAL STATE ============
 updateUIState();

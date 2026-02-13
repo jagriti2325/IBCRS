@@ -1,4 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="g1" x1="0" x2="1">
+      <stop offset="0%" stop-color="#0066ff"/>
+      <stop offset="100%" stop-color="#00d4ff"/>
+    </linearGradient>
+  </defs>
+  <rect width="200" height="200" rx="28" fill="#071221" />
+  <g transform="translate(40,40)">
+    <polygon points="60,0 120,30 120,90 60,120 0,90 0,30" fill="url(#g1)" opacity="0.95" />
+    <g transform="translate(30,18)">
+      <path d="M6 6 C14 0, 26 0, 34 6" stroke="#071221" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M6 18 C14 24, 26 24, 34 18" stroke="#071221" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <circle cx="6" cy="6" r="3" fill="#071221" />
+      <circle cx="34" cy="18" r="3" fill="#071221" />
+    </g>
+  </g>
+  <text x="100" y="176" font-family="Segoe UI, Arial" font-size="18" text-anchor="middle" fill="#a8d7ff" font-weight="700">IBCRS</text>
+</svg>
+<?xml version="1.0" encoding="UTF-8"?>
 <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
