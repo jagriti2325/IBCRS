@@ -3,10 +3,833 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="IBCRS - Intelligent BioTech Component Recognition System with real-time AI detection">
-    <meta name="theme-color" content="#0066ff">
-    <meta name="description" content="IBCRS - Intelligent BioTech Component Recognition System">
-    <title>IBCRS - Intelligent BioTech Component Recognition System</title>
+    <meta name="description" content="About IBCRS - Intelligent BioTech Component Recognition System - AI-powered biotech equipment detection">
+    <title>About Us - IBCRS | Intelligent BioTech Component Recognition</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%);
+            color: #ffffff;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            background: rgba(15, 20, 25, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0, 102, 255, 0.2);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .navbar-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #0066ff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .logo svg,
+        .logo img {
+            width: 44px;
+            height: 44px;
+            display: block;
+        }
+
+        .logo:hover {
+            color: #00d4ff;
+        }
+
+        .back-btn {
+            background: rgba(0, 102, 255, 0.2);
+            border: 1px solid rgba(0, 102, 255, 0.4);
+            color: #0066ff;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background: rgba(0, 102, 255, 0.3);
+            border-color: #00d4ff;
+            color: #00d4ff;
+            transform: translateX(-3px);
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 0.5rem;
+            margin: 0;
+            padding: 0;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-links li a {
+            color: #b8ccff;
+            text-decoration: none;
+            padding: 0.6rem 1rem;
+            border-radius: 4px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            display: block;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .nav-links li a:hover {
+            color: #00d4ff;
+            background: rgba(0, 102, 255, 0.1);
+        }
+
+        /* CONTAINER */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        /* HEADER */
+        .page-header {
+            background: linear-gradient(135deg, rgba(0, 102, 255, 0.15), rgba(0, 212, 255, 0.1));
+            border: 2px solid rgba(0, 102, 255, 0.3);
+            border-radius: 12px;
+            padding: 3rem 2rem;
+            margin-bottom: 3rem;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #0066ff, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
+
+        .page-header p {
+            color: #a0aec0;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .page-header .tagline {
+            color: #00d4ff;
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-top: 0.8rem;
+        }
+
+        /* ABOUT SECTION */
+        .section {
+            background: rgba(26, 31, 46, 0.8);
+            border: 1px solid rgba(0, 102, 255, 0.2);
+            border-radius: 12px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .section:hover {
+            border-color: rgba(0, 212, 255, 0.4);
+            box-shadow: 0 10px 30px rgba(0, 102, 255, 0.1);
+        }
+
+        .section h2 {
+            color: #0066ff;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .section h3 {
+            color: #00d4ff;
+            font-size: 1.4rem;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .section p {
+            color: #b0b8c0;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .section ul, .section ol {
+            margin: 1.5rem 0;
+            padding-left: 1.5rem;
+            color: #b0b8c0;
+        }
+
+        .section li {
+            margin-bottom: 0.8rem;
+            line-height: 1.6;
+        }
+
+        /* TEAM GRID */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .team-card {
+            background: linear-gradient(135deg, rgba(26, 31, 46, 0.9), rgba(15, 20, 25, 0.9));
+            border: 1px solid rgba(0, 102, 255, 0.3);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .team-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.1), transparent);
+            transition: left 0.3s ease;
+        }
+
+        .team-card:hover::before {
+            left: 100%;
+        }
+
+        .team-card:hover {
+            border-color: rgba(0, 212, 255, 0.6);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 102, 255, 0.3);
+        }
+
+        .team-avatar {
+            width: 110px;
+            height: 110px;
+            margin: 0 auto 1.5rem;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0066ff, #0052cc);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.8rem;
+            border: 3px solid rgba(0, 212, 255, 0.3);
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 102, 255, 0.3);
+        }
+
+        .avatar-svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .avatar-wrap {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .bob {
+            animation: bob 3s ease-in-out infinite;
+        }
+
+        @keyframes bob {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+            100% { transform: translateY(0); }
+        }
+
+        .team-card:hover .team-avatar {
+            border-color: rgba(0, 212, 255, 0.8);
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(0, 212, 255, 0.4);
+        }
+
+        .team-name {
+            color: #ffffff;
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .team-role {
+            color: #00d4ff;
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .team-bio {
+            color: #a0aec0;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .team-social {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .social-link {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: rgba(0, 102, 255, 0.2);
+            border: 2px solid rgba(0, 102, 255, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0066ff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .social-link:hover {
+            background: rgba(0, 212, 255, 0.2);
+            border-color: rgba(0, 212, 255, 0.8);
+            color: #00d4ff;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .team-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        .skill-tag {
+            background: rgba(0, 102, 255, 0.15);
+            border: 1px solid rgba(0, 102, 255, 0.3);
+            color: #00d4ff;
+            padding: 0.4rem 0.9rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .skill-tag:hover {
+            background: rgba(0, 102, 255, 0.25);
+            border-color: rgba(0, 212, 255, 0.6);
+            transform: scale(1.05);
+        }
+
+        /* FEATURES GRID */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            background: rgba(26, 31, 46, 0.5);
+            border: 1px solid rgba(0, 102, 255, 0.2);
+            border-radius: 10px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #0066ff, #00d4ff);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-card:hover {
+            border-color: rgba(0, 212, 255, 0.5);
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0, 102, 255, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            color: #0066ff;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h4 {
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .feature-card p {
+            color: #a0aec0;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        /* FOOTER */
+        .footer {
+            background: rgba(15, 20, 25, 0.95);
+            border-top: 1px solid rgba(0, 102, 255, 0.2);
+            padding: 2rem;
+            text-align: center;
+            color: #a0aec0;
+            margin-top: 3rem;
+        }
+
+        .footer h3 {
+            color: #0066ff;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .footer a {
+            color: #00d4ff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .footer a:hover {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: 1.8rem;
+            }
+
+            .section h2 {
+                font-size: 1.5rem;
+            }
+
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="logo">
+                <img src="assets/logo.svg" alt="IBCRS logo" />
+                <span>IBCRS</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#detection">Detection</a></li>
+                <li><a href="index.html#stats">Features</a></li>
+                <li><a href="index.html#team">Innovators</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="about.html#contact">Contact Us</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+
+    <!-- MAIN CONTAINER -->
+    <div class="container">
+        <!-- PAGE HEADER -->
+        <div class="page-header">
+            <h1><i class="fas fa-info-circle"></i> About IBCRS</h1>
+            <p>Pioneering the Future of Biotech Component Recognition with Cutting-Edge AI Technology</p>
+            <p class="tagline" style="color: #00d4ff; font-size: 1rem; font-weight: 600; letter-spacing: 0.5px; margin-top: 0.8rem;">Transform Your Biotech Workflow with Intelligent Automation</p>
+        </div>
+
+        <!-- WHAT IS IBCRS SECTION -->
+        <div class="section">
+            <h2>
+                <i class="fas fa-cubes"></i> What is IBCRS?
+            </h2>
+            <p>
+                IBCRS (Intelligent BioTech Component Recognition System) is an advanced AI-powered platform designed to revolutionize how biotech laboratories identify, classify, and manage equipment and components. By leveraging state-of-the-art computer vision and deep learning technologies, IBCRS enables real-time, accurate detection of biotech instruments with unprecedented speed and precision.
+            </p>
+            <p>
+                Our system seamlessly integrates into existing laboratory workflows, providing researchers, technicians, and facility managers with powerful tools to streamline operations, enhance accuracy, and accelerate scientific discovery.
+            </p>
+        </div>
+
+        <!-- OUR CAPABILITIES SECTION -->
+        <div class="section">
+            <h2>
+                <i class="fas fa-bolt"></i> Core Capabilities
+            </h2>
+            <div class="features-grid" style="text-align: center;">
+                <div class="feature-card" style="background: rgba(0, 102, 255, 0.1); border: 1px solid rgba(0, 102, 255, 0.3);">
+                    <div style="font-size: 2.5rem; color: #0066ff; margin-bottom: 1rem;">25-30 FPS</div>
+                    <h4 style="color: #00d4ff; margin-bottom: 0.5rem;">Real-Time Detection</h4>
+                    <p style="color: #a0aec0;">Reliable real-time processing for lab workflows</p>
+                </div>
+                <div class="feature-card" style="background: rgba(0, 102, 255, 0.1); border: 1px solid rgba(0, 102, 255, 0.3);">
+                    <div style="font-size: 2.5rem; color: #0066ff; margin-bottom: 1rem;">80%</div>
+                    <h4 style="color: #00d4ff; margin-bottom: 0.5rem;">High Accuracy</h4>
+                    <p style="color: #a0aec0;">Robust detection suitable for most laboratory needs</p>
+                </div>
+                <div class="feature-card" style="background: rgba(0, 102, 255, 0.1); border: 1px solid rgba(0, 102, 255, 0.3);">
+                    <div style="font-size: 2.5rem; color: #0066ff; margin-bottom: 1rem;">7+</div>
+                    <h4 style="color: #00d4ff; margin-bottom: 0.5rem;">Components</h4>
+                    <p style="color: #a0aec0;">Detects multiple biotech types</p>
+                </div>
+                <div class="feature-card" style="background: rgba(0, 102, 255, 0.1); border: 1px solid rgba(0, 102, 255, 0.3);">
+                    <div style="font-size: 2.5rem; color: #0066ff; margin-bottom: 1rem;">50 ms</div>
+                    <h4 style="color: #00d4ff; margin-bottom: 0.5rem;">Inference Time</h4>
+                    <p style="color: #a0aec0;">Low-latency inference suitable for near real-time feedback</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- MISSION & VISION SECTION -->
+        <div class="section">
+            <h2>
+                <i class="fas fa-bullseye"></i> Our Mission & Vision
+            </h2>
+            <h3><i class="fas fa-flag"></i> Mission</h3>
+            <p>
+                To revolutionize biotech component recognition and laboratory automation through advanced artificial intelligence and machine learning. We envision a world where intelligent technology eliminates manual identification processes, enabling scientists to focus entirely on discovery and innovation.
+            </p>
+            <h3><i class="fas fa-eye"></i> Vision</h3>
+            <p>
+                To become the global leader in AI-powered laboratory automation, setting new standards for accuracy, speed, and accessibility. We aim to empower research institutions of all sizes with cutting-edge technology that democratizes advanced AI capabilities.
+            </p>
+        </div>
+
+        <!-- KEY FEATURES SECTION -->
+        <div class="section">
+            <h2>
+                <i class="fas fa-star"></i> Key Features & Benefits
+            </h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <h4>Live Webcam Detection</h4>
+                    <p>Stream video directly from your webcam with instant real-time detection feedback</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h4>Lightning-Fast Performance</h4>
+                    <p>YOLOv8 delivers state-of-the-art speed and reliability</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h4>Performance Analytics</h4>
+                    <p>Monitor FPS, inference times, CPU/GPU utilization in real-time</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h4>Enterprise Security</h4>
+                    <p>Built with security first - encrypted data and audit logs</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h4>Component Education</h4>
+                    <p>Access detailed specifications and tutorial videos for each component</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h4>Multi-User Support</h4>
+                    <p>Deploy across multiple laboratory stations with centralized management</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- VALUES SECTION -->
+        <div class="section">
+            <h2>
+                <i class="fas fa-heart"></i> Our Core Values
+            </h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h4>Innovation</h4>
+                    <p>Continuously pushing boundaries in AI and ML technology</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h4>Collaboration</h4>
+                    <p>Working together with our users and partners for mutual success</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h4>Reliability</h4>
+                    <p>Building dependable systems you can trust</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h4>Accessibility</h4>
+                    <p>Making advanced technology available to everyone</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h4>Continuous Learning</h4>
+                    <p>Constantly improving and evolving our platform</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h4>Excellence</h4>
+                    <p>Striving for the highest standards in everything we do</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TEAM SECTION -->
+        <div class="section">
+            <h2>
+                <i class="fas fa-users"></i> Meet Our Innovators
+            </h2>
+            <p>Our team comprises world-class experts in AI, biotech, and software engineering, all dedicated to making component recognition smarter and faster.</p>
+            
+            <div class="team-grid">
+                <!-- Innovator 1 - Jagriti Arora -->
+                <div class="team-card">
+                    <div class="team-avatar avatar-wrap">
+                        <img src="https://i.pinimg.com/736x/15/f5/6a/15f56a0eb0e2e138702d9ec3bbafadf3.jpg" alt="Jagriti (avatar)" class="avatar-svg bob" />
+                        <p style="font-size:10px; color:#9fbce8; margin-top:6px;">Image source: Pinterest</p>
+                    </div>
+                    <h3 class="team-name">Jagriti Arora</h3>
+                    <p class="team-role">4th Year UG Student</p>
+                    <div class="team-social">
+                        <a href="https://www.linkedin.com/in/jagriti-arora22" class="social-link" title="LinkedIn" target="_blank"><i class="fab fa-linkedin"></i></a>
+                        <a href="https://github.com/jagriti2325" class="social-link" title="GitHub" target="_blank"><i class="fab fa-github"></i></a>
+                        <a href="mailto:arorajags5@gmail.com" class="social-link" title="Email"><i class="fas fa-envelope"></i></a>
+                    </div>
+                    <div class="team-skills">
+                        <span class="skill-tag">AI/ML</span>
+                        <span class="skill-tag">Python</span>
+                        <span class="skill-tag">Computer Vision</span>
+                    </div>
+                </div>
+
+                <!-- Innovator 2 - Rudraksh Singh Bhadauria -->
+                <div class="team-card">
+                    <div class="team-avatar avatar-wrap">
+                        <!-- Rudraksh avatar replaced by external character image from Anibase (credited) -->
+                        <img src="https://anibase.net/files/5ba25e23759dbaecc5b3691502fe0437/320" alt="Rudraksh (avatar)" class="avatar-svg bob" />
+                        <p style="font-size:10px; color:#9fbce8; margin-top:6px;">Image credit: anibase.net</p>
+                    </div>
+                    <h3 class="team-name">Rudraksh Singh Bhadauria</h3>
+                    <p class="team-role">4th Year UG Student</p>
+                    <div class="team-social">
+                        <a href="https://www.linkedin.com/in/rudrakshonwork/" class="social-link" title="LinkedIn" target="_blank"><i class="fab fa-linkedin"></i></a>
+                        <a href="https://github.com/rudraksh2611" class="social-link" title="GitHub" target="_blank"><i class="fab fa-github"></i></a>
+                        <a href="mailto:workrsb2611@gmail.com" class="social-link" title="Email"><i class="fas fa-envelope"></i></a>
+                    </div>
+                    <div class="team-skills">
+                        <span class="skill-tag">AI/ML</span>
+                        <span class="skill-tag">Backend</span>
+                        <span class="skill-tag">Full Stack</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TECHNOLOGY SECTION -->
+        <div class="section">
+            <h2>
+                <i class="fas fa-laptop-code"></i> Our Technology Stack
+            </h2>
+            <h3>Core Technologies</h3>
+            <ul>
+                <li><strong>YOLOv8:</strong> State-of-the-art real-time object detection framework</li>
+                <li><strong>PyTorch:</strong> Deep learning framework powering our neural networks</li>
+                <li><strong>OpenCV:</strong> Advanced computer vision processing library</li>
+                <li><strong>Flask:</strong> Lightweight web framework for backend APIs</li>
+                <li><strong>React & Next.js:</strong> Modern frameworks for responsive frontend</li>
+                <li><strong>Docker & Kubernetes:</strong> Enterprise containerization and deployment</li>
+            </ul>
+
+            <h3>Supported Biotech Components</h3>
+            <ul>
+                <li><strong>Camera (CAM):</strong> Precision imaging for documentation and analysis</li>
+                <li><strong>Drone Receiver (DroneRX):</strong> RF receiver modules for wireless comms</li>
+                <li><strong>PIR Sensor:</strong> Motion detection and environmental monitoring</li>
+                <li><strong>Sonar Sensor:</strong> Ultrasonic measurement and proximity detection</li>
+                <li><strong>Colorimeter:</strong> Precise color measurement and analysis</li>
+                <li><strong>Magnetic Stirrer:</strong> Essential mixing equipment</li>
+                <li><strong>pH Meter:</strong> Critical instruments for quality control</li>
+            </ul>
+
+            <h3>Supported AI Models</h3>
+            <ul>
+                <li>YOLOv5 - Balanced speed and accuracy</li>
+                <li>YOLOv8 - Latest with improved performance</li>
+                <li>YOLOv9 - Enhanced detection capabilities</li>
+                <li>YOLOv11 - Cutting-edge performance</li>
+                <li>YOLOv12 - Experimental / extended backbone support</li>
+                <li>YOLOv26 - High-capacity detection models</li>
+                <li>Custom trained models for specific applications</li>
+            </ul>
+        </div>
+
+        <!-- WHY CHOOSE IBCRS SECTION -->
+        <div class="section">
+            <h2>
+                <i class="fas fa-check-circle"></i> Why Choose IBCRS?
+            </h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <h4>Industry-Leading Accuracy</h4>
+                    <p>80% detection accuracy with minimal false positives for reliable operations</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-tachometer-alt"></i>
+                    </div>
+                    <h4>Exceptional Performance</h4>
+                    <p>Real-time processing at 25-30 FPS with ~50 ms inference time per frame</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-cog"></i>
+                    </div>
+                    <h4>Easy Integration</h4>
+                    <p>Simple deployment with RESTful APIs and comprehensive documentation</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <h4>Advanced Analytics</h4>
+                    <p>Detailed performance metrics and comprehensive reporting tools</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h4>Security First</h4>
+                    <p>Enterprise-grade security with encrypted data and audit trails</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h4>24/7 Support</h4>
+                    <p>Dedicated technical support team for implementation and troubleshooting</p>
+                </div>
+            </div>
+        </div>
+        <div class="section" id="contact">
+            <h2>
+                <i class="fas fa-envelope"></i> Get In Touch
+            </h2>
+            <p>Interested in learning more about IBCRS? Have questions about implementation or partnership opportunities? We'd love to hear from you!</p>
+            <p style="margin: 1.5rem 0; font-size: 1.05rem;">
+                <strong><i class="fas fa-at"></i> Email:</strong> <a href="mailto:skai.futureishere@gmail.com" style="color: #00d4ff; text-decoration: none; transition: all 0.3s ease;" onmouseover="this.style.color='#ffffff'; this.style.textDecoration='underline';" onmouseout="this.style.color='#00d4ff'; this.style.textDecoration='none';">skai.futureishere@gmail.com</a>
+            </p>
+            <p style="font-size: 1.05rem;">
+                <strong><i class="fas fa-globe"></i> Website:</strong> <a href="https://skaitech.vercel.app/" target="_blank" style="color: #00d4ff; text-decoration: none; transition: all 0.3s ease;" onmouseover="this.style.color='#ffffff'; this.style.textDecoration='underline';" onmouseout="this.style.color='#00d4ff'; this.style.textDecoration='none';">https://skaitech.vercel.app/</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div style="margin-bottom: 2rem;">
+            <h3>
+                <i class="fas fa-envelope"></i> Get In Touch
+            </h3>
+            <p style="margin-bottom: 0.8rem;">Email: <a href="mailto:skai.futureishere@gmail.com">skai.futureishere@gmail.com</a></p>
+            <p>Website: <a href="https://skaitech.vercel.app/" target="_blank">https://skaitech.vercel.app/</a></p>
+        </div>
+        <hr style="border: 1px solid rgba(0, 102, 255, 0.2); margin: 2rem 0;">
+        <p>&copy; 2026 IBCRS - Intelligent BioTech Component Recognition System. All rights reserved.</p>
+        <p style="margin-top: 1rem; font-size: 0.9rem;">Powered by YOLOv8 • PyTorch • OpenCV • Flask • React</p>
+        <p style="margin-top: 1rem; font-size: 0.85rem; color: #0066ff;">
+            <i class="fas fa-heart" style="color: #ff3333;"></i> Engineered with passion by the IBCRS Innovation Team
+        </p>
+    </footer>
+    
+</body>
+</html>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
